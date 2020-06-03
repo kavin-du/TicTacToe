@@ -12,11 +12,12 @@ import java.awt.*;
 
 public class TicTacToe extends JPanel {
 
-    // Jpanel panel;
     static JButton b1, b2, b3, b4, b5, b6, b7, b8, b9;
 
     public TicTacToe(JPanel panel) {
         super(new BorderLayout());
+
+        // initialize buttons with empty text
         b1 = new JButton("");
         b2 = new JButton("");
         b3 = new JButton("");
@@ -27,7 +28,7 @@ public class TicTacToe extends JPanel {
         b8 = new JButton("");
         b9 = new JButton("");
 
-        // b1.setPreferredSize(new Dimension(50,50));
+        // determine button positions in the window
         b1.setBounds(30, 10, 100, 100);
         b2.setBounds(140, 10, 100, 100);
         b3.setBounds(250, 10, 100, 100);
@@ -37,6 +38,8 @@ public class TicTacToe extends JPanel {
         b7.setBounds(30, 230, 100, 100);
         b8.setBounds(140, 230, 100, 100);
         b9.setBounds(250, 230, 100, 100);
+
+        // adding action listeners for each button
         b1.addActionListener(new Action(b1, 0));
         b2.addActionListener(new Action(b2, 1));
         b3.addActionListener(new Action(b3, 2));
@@ -46,6 +49,8 @@ public class TicTacToe extends JPanel {
         b7.addActionListener(new Action(b7, 6));
         b8.addActionListener(new Action(b8, 7));
         b9.addActionListener(new Action(b9, 8));
+
+        // place buttons in window
         panel.add(b1);
         panel.add(b2);
         panel.add(b3);
@@ -55,8 +60,6 @@ public class TicTacToe extends JPanel {
         panel.add(b7);
         panel.add(b8);
         panel.add(b9);
-        // add(panel);
-        // add(b1, BorderLayout.CENTER);
 
     }
 
@@ -64,31 +67,29 @@ public class TicTacToe extends JPanel {
         JFrame frame = new JFrame("TicTacToe");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(); // buttons are placed in panel
         panel.setVisible(true);
         panel.setLayout(null);
-        // frame.add(panel);
 
         JComponent newContentPane = new TicTacToe(panel);
 
-        newContentPane.setOpaque(true);
+        newContentPane.setOpaque(true); // contentpane must be opaque
         frame.setContentPane(newContentPane);
-        frame.add(panel);
+        frame.add(panel); // add panel to frame
         frame.setPreferredSize(new Dimension(400, 400));
         frame.pack();
         frame.setLocationRelativeTo(null); // start in the center of screen
-
         frame.setVisible(true);
 
     }
 
     static class Action implements ActionListener {
-        JButton b;
-        int position;
-        static Boolean flag = true;
-        static Boolean isFilled = false;
-        static int[][] array = new int[3][3];
-        static int timesPressed = 0;
+        JButton b; // specific button in 3x3 matrix
+        int position; // button position in imaginary 3x3 matrix
+        static Boolean flag = true; // this flag toggles, true if player 1 pressed, false if player 2 pressed
+        static Boolean isFilled = false; // check if the user clicked all buttons
+        static int[][] array = new int[3][3]; // 3x3 matrix to place the values(1 or 2)
+        static int timesPressed = 0; // if user pressed all buttons this will be 9
 
         public Action(JButton b, int position) {
             if (!isFilled) {
@@ -103,35 +104,35 @@ public class TicTacToe extends JPanel {
             if (timesPressed <= 9) {
 
                 if (!(this.b.getText().equals("1") || this.b.getText().equals("2"))) {
-                    if (flag) {
+                    if (flag) { // flag true means the button is pressed by player 1
                         this.b.setText("1");
                         this.b.setFont(new Font("Arial", Font.BOLD, 20));
                         flag = false;
                         timesPressed++;
-                        array[this.position / 3][this.position % 3] = 1;
+                        array[this.position / 3][this.position % 3] = 1; // placing the button value in 3x3 matrix
                     } else {
                         this.b.setText("2");
                         this.b.setFont(new Font("Arial", Font.BOLD, 20));
                         flag = true;
                         timesPressed++;
-                        array[this.position / 3][this.position % 3] = 2;
+                        array[this.position / 3][this.position % 3] = 2; // placing the button value in 3x3 matrix
                     }
                 }
 
-                if (timesPressed < 9) {
+                if (timesPressed < 9) { // the player's haven't pressed all buttons yet
                     int winner = Winner.checkWinnerBeforeFinish(array);
                     if (winner > 0) {
-                        NewFrame.createNewFrame("Player " + winner + " wins.");
-                        timesPressed = 10;
+                        NewFrame.createNewFrame("Player " + winner + " wins");
+                        timesPressed = 10; // avoid calculating winner after winner announced
                     }
-                } else if (timesPressed == 9) {
+                } else if (timesPressed == 9) { // players have pressed all the buttons
                     int winner = Winner.checkWinner(array);
                     timesPressed++;
-                    if (winner != 0) {
-                        NewFrame.createNewFrame("Player " + winner + " wins.");
+                    if (winner != 0) { // winner =0 means it is draw
+                        NewFrame.createNewFrame("Player " + winner + " wins");
                         
                     } else {
-                        NewFrame.createNewFrame("Nobody wins.");
+                        NewFrame.createNewFrame("Nobody wins");
                     }
                 }
             }
